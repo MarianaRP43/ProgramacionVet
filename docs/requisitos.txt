@@ -1,0 +1,86 @@
+# Sistema de Gestión Veterinaria - Documento de Requisitos
+
+## Descripción General
+Sistema integral para gestión de clínica veterinaria que administra servicios, productos, transacciones, clientes, mascotas y empleados.
+
+## Objetivos del Sistema
+- Gestionar servicios veterinarios y productos de venta
+- Administrar transacciones de servicios y productos
+- Controlar métodos de pago y comisiones
+- Mantener información de clientes y sus mascotas
+- Gestionar empleados y sus asignaciones
+
+## Actores del Sistema
+- **Veterinario/Empleado**: Realiza servicios, registra observaciones
+- **Recepcionista**: Registra transacciones, gestiona clientes
+- **Cliente**: Dueño de la(s) mascota(s)
+- **Administrador**: Gestiona productos, servicios y empleados
+
+---
+
+## Requisitos Funcionales
+
+### Gestión de Clientes y Mascotas
+| ID | Requisito | Descripción |
+|----|-----------|-------------|
+| RF001 | Registrar Cliente | Sistema debe permitir registrar clientes (Documento, Nombre, Teléfono, Email) |
+| RF002 | Registrar Mascota | Registrar mascotas (Nombre, Tipo, Raza, Peso) |
+| RF003 | Asociar Mascota-Cliente | Vincular mascotas a clientes mediante ClientesMascotas |
+| RF004 | Consultar Clientes | Buscar clientes por documento o nombre |
+
+### Gestión de Servicios
+| ID | Requisito | Descripción |
+|----|-----------|-------------|
+| RF005 | Crear Servicio | Registrar servicios veterinarios (Categoría, TiempoEstimado) |
+| RF006 | Asignar Servicio | Asignar servicios a transacciones con empleado y observaciones |
+| RF007 | Calcular Costo | Calcular costos de servicios considerando comisiones |
+
+### Gestión de Productos
+| ID | Requisito | Descripción |
+|----|-----------|-------------|
+| RF008 | Registrar Producto | Gestionar productos (Descripción, ValorCompra, ValorVenta) |
+| RF009 | Asociar Producto-Servicio | Vincular productos a servicios específicos |
+| RF010 | Control de Inventario | Gestionar stock y márgenes de ganancia |
+
+### Gestión de Transacciones y Pagos
+| ID | Requisito | Descripción |
+|----|-----------|-------------|
+| RF011 | Registrar Transacción | Crear transacciones con cliente y método de pago |
+| RF012 | Procesar Transacción Producto | Vincular productos a transacciones |
+| RF013 | Procesar Transacción Servicio | Vincular servicios a transacciones con observaciones |
+| RF014 | Calcular Comisiones | Aplicar comisiones según método de pago |
+
+### Gestión de Empleados
+| ID | Requisito | Descripción |
+|----|-----------|-------------|
+| RF015 | Registrar Empleado | Gestionar empleados (Nombre, Cargo) |
+| RF016 | Asignar Servicios | Asignar empleados a servicios específicos |
+
+---
+
+## Modelo de Datos (Basado en MER)
+
+### Entidades Principales
+- **Clientes**: IDCliente, Documento, Nombre, Telefono, Email
+- **Mascotas**: IDMascota, Nombre, Tipo, Raza, Peso
+- **ClientesMascotas**: IDCiiMas, Cliente, Mascota (tabla de relación)
+- **Services**: IDServicio, Categoria, TiempoEstimado
+- **Products**: IDProductos, Descripción, ValorCompra, ValorVenta, Servicio
+- **Employees**: IDEmpleados, Nombre, Cargo
+- **MetodoDePago**: IDMetodo, Metodo, Comision
+- **Transacciones**: IDTransacciones, Cliente, MetodoDePago, Fecha
+- **Transactions** (Productos): IDTransProd, Producto, Transaction
+- **Transactions** (Servicios): IDTransServ, Servicio, Transaction, Observaciones, Empleado, Costo
+
+---
+
+## Relaciones del Sistema
+- Cliente ↔ Mascotas (N:M a través de ClientesMascotas)
+- Transacciones → Cliente (N:1)
+- Transacciones → MetodoDePago (N:1)
+- Transactions_Productos → Productos (N:1)
+- Transactions_Productos → Transacciones (N:1)
+- Transactions_Servicios → Services (N:1)
+- Transactions_Servicios → Transacciones (N:1)
+- Transactions_Servicios → Employees (N:1)
+- Products → Services (N:1)

@@ -1,0 +1,297 @@
+#  Explicación Detallada de Todas las Clases
+
+## Clase: Cliente
+
+public class Cliente {
+    private Long idCliente;
+    private String documento;
+    private String nombre;
+    private String telefono;
+    private String email;
+    private List<Mascota> mascotas;
+}
+
+Descripción: Representa a los dueños de las mascotas que utilizan los servicios de la veterinaria.
+
+ Responsabilidades:
+
+- Almacenar información personal de los clientes
+- Gestionar la relación con sus mascotas
+- Servir como referencia para transacciones y facturación
+
+ Relaciones:
+
+Cliente 1 → * Mascota (Un cliente puede tener múltiples mascotas)
+
+Cliente 1 → * Transaccion (Un cliente puede realizar múltiples transacciones)
+
+ Atributos Clave:
+
+documento: Identificación única del cliente (cédula, DNI, etc.)
+mascotas: Lista de todas las mascotas asociadas al cliente
+
+---
+
+Clase: Mascota
+
+public class Mascota {
+    private Long idMascota;
+    private String nombre;
+    private String tipo;
+    private String raza;
+    private Double peso;
+    private Cliente cliente;
+}
+
+Descripción: Representa a los animales pacientes que reciben servicios en la veterinaria.
+
+ Responsabilidades:
+
+- Almacenar datos médicos y características de las mascotas
+- Servir como sujeto de servicios veterinarios
+- Mantener relación con su dueño (cliente)
+
+ Relaciones:
+
+Mascota * → 1 Cliente (Cada mascota pertenece a un cliente)
+
+Mascota 1 → * TransaccionServicio (Una mascota puede tener múltiples servicios)
+
+ Atributos Clave:
+
+tipo: Especie animal (perro, gato, ave, etc.)
+peso: Importante para dosificación de medicamentos
+raza: Información relevante para diagnósticos específicos
+
+---
+
+Clase: Servicio
+
+public class Servicio {
+    private Long idServicio;
+    private String categoria;
+    private Integer tiempoEstimado;
+    private List<Producto> productos;
+}
+
+Descripción: Representa los servicios veterinarios ofrecidos por la clínica.
+
+ Responsabilidades:
+
+- Definir los tipos de servicios disponibles
+- Establecer tiempos estimados de realización
+- Gestionar productos asociados a cada servicio
+
+ Relaciones:
+
+Servicio 1 → * TransaccionServicio (Un servicio puede ser vendido múltiples veces)
+
+Servicio 1 → * Producto (Un servicio puede requerir múltiples productos)
+
+ Atributos Clave:
+
+categoria: Tipo de servicio (consulta, vacunación, cirugía, etc.)
+tiempoEstimado: Duración aproximada en minutos
+
+---
+
+Clase: Producto
+
+public class Producto {
+    private Long idProducto;
+    private String descripcion;
+    private Double valorCompra;
+    private Double valorVenta;
+    private Servicio servicio;
+}
+
+Descripción: Representa los productos comercializados por la veterinaria.
+
+ Responsabilidades:
+
+- Gestionar inventario de productos
+- Controlar márgenes de ganancia (valorCompra vs valorVenta)
+- Asociar productos a servicios específicos
+
+ Relaciones:
+
+Producto * → 1 Servicio (Un producto puede estar asociado a un servicio)
+
+Producto 1 → * TransaccionProducto (Un producto puede ser vendido múltiples veces)
+
+ Atributos Clave:
+
+valorCompra: Costo de adquisición para la veterinaria
+valorVenta: Precio de venta al cliente
+servicio: Servicio al que está asociado (puede ser null para ventas directas)
+
+---
+
+Clase: Empleado
+
+public class Empleado {
+    private Long idEmpleado;
+    private String nombre;
+    private String cargo;
+}
+
+Descripción: Representa al personal que trabaja en la veterinaria.
+
+ Responsabilidades:
+
+- Gestionar información del personal
+- Asignar responsabilidades mediante el cargo
+- Servir como referencia para servicios realizados
+
+ Relaciones:
+
+Empleado 1 → * TransaccionServicio (Un empleado puede realizar múltiples servicios)
+
+ Atributos Clave:
+
+cargo: Rol dentro de la veterinaria (veterinario, asistente, recepcionista)
+
+---
+
+Clase: MetodoPago
+
+public class MetodoPago {
+    private Long idMetodo;
+    private String metodo;
+    private Double comision;
+}
+
+Descripción: Representa las formas de pago aceptadas por la veterinaria.
+
+ Responsabilidades:
+
+- Definir métodos de pago disponibles
+- Gestionar comisiones asociadas a cada método
+- Calcular costos adicionales por comisiones
+
+ Relaciones:
+
+MetodoPago 1 → * Transaccion (Un método de pago puede ser usado en múltiples transacciones)
+
+ Atributos Clave:
+
+metodo: Tipo de pago (efectivo, tarjeta, transferencia)
+comision: Porcentaje de comisión aplicado (ej: 0.03 para 3%)
+
+---
+
+Clase: Transaccion
+
+public class Transaccion {
+    private Long idTransaccion;
+    private Cliente cliente;
+    private MetodoPago metodoPago;
+    private Date fecha;
+    private List<TransaccionProducto> productos;
+    private List<TransaccionServicio> servicios;
+}
+
+Descripción: Representa una transacción comercial que puede incluir productos y servicios.
+
+ Responsabilidades:
+
+- Agrupar ventas de productos y servicios en una sola factura
+- Gestionar información de pago y cliente
+- Servir como registro financiero
+
+ Relaciones:
+
+Transaccion * → 1 Cliente (Cada transacción pertenece a un cliente)
+
+Transaccion * → 1 MetodoPago (Cada transacción usa un método de pago)
+
+Transaccion 1 → * TransaccionProducto (Una transacción puede incluir múltiples productos)
+
+Transaccion 1 → * TransaccionServicio (Una transacción puede incluir múltiples servicios)
+
+ Atributos Clave:
+
+fecha: Fecha y hora de la transacción
+productos: Lista de productos vendidos en la transacción
+servicios: Lista de servicios realizados en la transacción
+
+---
+
+Clase: TransaccionProducto
+
+public class TransaccionProducto {
+    private Long idTransProd;
+    private Producto producto;
+    private Transaccion transaccion;
+}
+
+Descripción: Representa la relación entre una transacción y los productos vendidos.
+
+ Responsabilidades:
+
+Registrar qué productos se vendieron en cada transacción
+
+Servir como tabla de unión entre Transaccion y Producto
+
+Permitir el control de inventario
+
+ Relaciones:
+
+TransaccionProducto * → 1 Producto (Cada registro referencia un producto)
+
+TransaccionProducto * → 1 Transaccion (Cada registro pertenece a una transacción)
+
+ Atributos Clave:
+
+producto: Producto específico vendido
+
+transaccion: Transacción a la que pertenece la venta
+
+---
+
+Clase: TransaccionServicio
+
+public class TransaccionServicio {
+    private Long idTransServ;
+    private Servicio servicio;
+    private Transaccion transaccion;
+    private String observaciones;
+    private Empleado empleado;
+    private Double costo;
+}
+
+Descripción: Representa la relación entre una transacción y los servicios realizados.
+
+ Responsabilidades:
+
+- Registrar qué servicios se realizaron en cada transacción
+- Almacenar observaciones médicas específicas
+- Asignar empleados responsables del servicio
+
+ Relaciones:
+
+TransaccionServicio * → 1 Servicio (Cada registro referencia un servicio)
+
+TransaccionServicio * → 1 Transaccion (Cada registro pertenece a una transacción)
+
+TransaccionServicio * → 1 Empleado (Cada registro tiene un empleado responsable)
+
+ Atributos Clave:
+
+observaciones: Notas médicas o detalles del servicio realizado
+costo: Precio final del servicio (puede diferir del precio base del servicio)
+empleado: Profesional que realizó el servicio
+
+---
+
+Resumen de Relaciones Completo
+
+Cliente (1) ──────────── (*) Mascota
+Cliente (1) ──────────── (*) Transaccion
+Transaccion (*) ──────── (1) MetodoPago
+Transaccion (1) ──────── (*) TransaccionProducto
+Transaccion (1) ──────── (*) TransaccionServicio
+TransaccionProducto (*) ─ (1) Producto
+TransaccionServicio (*) ─ (1) Servicio
+TransaccionServicio (*) ─ (1) Empleado
+Servicio (1) ─────────── (*) Producto
